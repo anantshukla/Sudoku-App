@@ -1,0 +1,508 @@
+{
+  "sudokugrid": [
+    [
+      {
+        "i": 0,
+        "j": 0,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 0,
+        "j": 1,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 0,
+        "j": 2,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 0,
+        "j": 3,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 0,
+        "j": 4,
+        "value": 2,
+        "editable": false
+      },
+      {
+        "i": 0,
+        "j": 5,
+        "value": 6,
+        "editable": false
+      },
+      {
+        "i": 0,
+        "j": 6,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 0,
+        "j": 7,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 0,
+        "j": 8,
+        "value": 3,
+        "editable": false
+      }
+    ],
+    [
+      {
+        "i": 1,
+        "j": 0,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 1,
+        "j": 1,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 1,
+        "j": 2,
+        "value": 5,
+        "editable": false
+      },
+      {
+        "i": 1,
+        "j": 3,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 1,
+        "j": 4,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 1,
+        "j": 5,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 1,
+        "j": 6,
+        "value": 6,
+        "editable": false
+      },
+      {
+        "i": 1,
+        "j": 7,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 1,
+        "j": 8,
+        "value": 7,
+        "editable": false
+      }
+    ],
+    [
+      {
+        "i": 2,
+        "j": 0,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 2,
+        "j": 1,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 2,
+        "j": 2,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 2,
+        "j": 3,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 2,
+        "j": 4,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 2,
+        "j": 5,
+        "value": 1,
+        "editable": false
+      },
+      {
+        "i": 2,
+        "j": 6,
+        "value": 9,
+        "editable": false
+      },
+      {
+        "i": 2,
+        "j": 7,
+        "value": 4,
+        "editable": false
+      },
+      {
+        "i": 2,
+        "j": 8,
+        "value": null,
+        "editable": true
+      }
+    ],
+    [
+      {
+        "i": 3,
+        "j": 0,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 3,
+        "j": 1,
+        "value": 3,
+        "editable": false
+      },
+      {
+        "i": 3,
+        "j": 2,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 3,
+        "j": 3,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 3,
+        "j": 4,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 3,
+        "j": 5,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 3,
+        "j": 6,
+        "value": 2,
+        "editable": false
+      },
+      {
+        "i": 3,
+        "j": 7,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 3,
+        "j": 8,
+        "value": null,
+        "editable": true
+      }
+    ],
+    [
+      {
+        "i": 4,
+        "j": 0,
+        "value": 7,
+        "editable": false
+      },
+      {
+        "i": 4,
+        "j": 1,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 4,
+        "j": 2,
+        "value": 9,
+        "editable": false
+      },
+      {
+        "i": 4,
+        "j": 3,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 4,
+        "j": 4,
+        "value": 1,
+        "editable": false
+      },
+      {
+        "i": 4,
+        "j": 5,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 4,
+        "j": 6,
+        "value": 8,
+        "editable": false
+      },
+      {
+        "i": 4,
+        "j": 7,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 4,
+        "j": 8,
+        "value": 6,
+        "editable": false
+      }
+    ],
+    [
+      {
+        "i": 5,
+        "j": 0,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 5,
+        "j": 1,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 5,
+        "j": 2,
+        "value": 8,
+        "editable": false
+      },
+      {
+        "i": 5,
+        "j": 3,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 5,
+        "j": 4,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 5,
+        "j": 5,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 5,
+        "j": 6,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 5,
+        "j": 7,
+        "value": 9,
+        "editable": false
+      },
+      {
+        "i": 5,
+        "j": 8,
+        "value": null,
+        "editable": true
+      }
+    ],
+    [
+      {
+        "i": 6,
+        "j": 0,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 6,
+        "j": 1,
+        "value": 8,
+        "editable": false
+      },
+      {
+        "i": 6,
+        "j": 2,
+        "value": 4,
+        "editable": false
+      },
+      {
+        "i": 6,
+        "j": 3,
+        "value": 1,
+        "editable": false
+      },
+      {
+        "i": 6,
+        "j": 4,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 6,
+        "j": 5,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 6,
+        "j": 6,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 6,
+        "j": 7,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 6,
+        "j": 8,
+        "value": null,
+        "editable": true
+      }
+    ],
+    [
+      {
+        "i": 7,
+        "j": 0,
+        "value": 5,
+        "editable": false
+      },
+      {
+        "i": 7,
+        "j": 1,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 7,
+        "j": 2,
+        "value": 2,
+        "editable": false
+      },
+      {
+        "i": 7,
+        "j": 3,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 7,
+        "j": 4,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 7,
+        "j": 5,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 7,
+        "j": 6,
+        "value": 4,
+        "editable": false
+      },
+      {
+        "i": 7,
+        "j": 7,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 7,
+        "j": 8,
+        "value": null,
+        "editable": true
+      }
+    ],
+    [
+      {
+        "i": 8,
+        "j": 0,
+        "value": 3,
+        "editable": false
+      },
+      {
+        "i": 8,
+        "j": 1,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 8,
+        "j": 2,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 8,
+        "j": 3,
+        "value": 6,
+        "editable": false
+      },
+      {
+        "i": 8,
+        "j": 4,
+        "value": 5,
+        "editable": false
+      },
+      {
+        "i": 8,
+        "j": 5,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 8,
+        "j": 6,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 8,
+        "j": 7,
+        "value": null,
+        "editable": true
+      },
+      {
+        "i": 8,
+        "j": 8,
+        "value": null,
+        "editable": true
+      }
+    ]
+  ]
+}

@@ -1,19 +1,4 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
+div.App {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -24,15 +9,113 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+div.AppHeading {
+  color: #7713CA;
+  padding-bottom: 4vh;
+  font-size: 35px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+div.BottomButtons {
+  padding-top: 5vh;
+}
+
+div.Outergrid {
+  padding: 5px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: grey;
+}
+
+div.NineDigitBox {
+  border-radius: 10px;
+  border-width: 3px;
+  border-style: solid;
+  margin: 5px;
+  border-color: grey;
+
+}
+
+div.NineDigitBox {
+  display: inline-block;
+}
+
+input {
+  caret-color: transparent;
+}
+
+input:focus {
+  outline: none;
+  border: 5px solid white;
+  border-width: 2px;
+  width: 38px;
+  height: 38px;
+  margin-left: -3px;
+  margin-top: -3px;
+}
+
+div.IndividualCell:hover {
+  border-width: 2px;
+  border-color: white;
+}
+
+.IndividualInputCell {
+  width: 25px;
+  height: 35px;
+  font-size: calc(10px + 2vmin);
+  background-color: inherit;
+  text-align: center;
+  border: 0px;
+  color: white;
+}
+
+div.IndividualCell
+{
+  border-width: 2px;
+  border-color: white;
+  border-style: solid;
+  border-color: grey;
+  vertical-align: top;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+}
+
+.button {
+  padding: 16px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 8px;
+
+}
+
+.button1 {
+  outline: none;
+  background-color: #282c99;
+  color: black;
+  border: none;
+  margin-right: 135px;
+}
+
+.button1:hover {
+  background-color: #bb86fc;
+  color: #282c34;
+}
+
+.button2 {
+  outline: none;
+  background-color: #282c99;
+  color: black;
+  border: none;
+}
+
+.button2:hover {
+  background-color: #bb86fc;
+  color: #282c34;
 }

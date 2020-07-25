@@ -1,24 +1,869 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect} from 'react';
 import './App.css';
+import jsonfile from './puzzle.json';
 
 function App() {
+  const [valueMatrix, setValueMatrix] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => null)));
+  const [editableMatrix, setEditableMatrix] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => false)));
+  const [initialRender, setInitialRender] = useState("0")
+  useEffect(() => {
+    populateArray();
+  })
+
+  const resetMatrix = () => {
+    console.log("Hiiiiiiiii")
+    var copyResetMatrix = valueMatrix;
+    for(var i = 0; i < 9; i++)
+    {
+      for(var j = 0; j < 9; j++)
+      {
+        copyResetMatrix[i][j] = null;
+      }
+    }
+
+    var copyResetEditableMatrix = editableMatrix;
+
+    for(i = 0; i < 9; i++)
+    {
+      for(j = 0; j < 9; j++)
+      {
+        copyResetEditableMatrix[i][j] = false;
+      }
+    }
+    setValueMatrix(copyResetMatrix);
+    setEditableMatrix(copyResetEditableMatrix);
+  }
+
+  const populateArray = () => {
+    //console.log("JSON file:", jsonfile.sudokugrid)
+    //console.log("State Value Matrix:", valueMatrix)
+
+    //copying the matrix with values into local memory
+    let copymatrix = valueMatrix;
+    valueMatrix.map((row, rowIndex) => (
+      row.map((column, columnIndex) => (
+        copymatrix[rowIndex][columnIndex] = jsonfile.sudokugrid[rowIndex][columnIndex].value
+      ))
+    ))
+
+    //copying the matrix with editable or not values into local memory
+    let copyEditableMatrix = editableMatrix;
+    editableMatrix.map((row, rowIndex) => (
+      row.map((column, columnIndex) => (
+        copyEditableMatrix[rowIndex][columnIndex] = jsonfile.sudokugrid[rowIndex][columnIndex].editable
+      ))
+    ))
+
+    //console.log("New Copymatrix", copymatrix)
+    setInitialMatrix(copymatrix);
+    setEditableMatrix(copyEditableMatrix);
+    //igit start
+    var ir = initialRender;
+    ir = true;
+    setInitialRender(ir)
+    //igit end
+
+    //console.log("New Val:", valueMatrix)
+  }
+
+  const setInitialMatrix = (copymatrix) => {
+    setValueMatrix(copymatrix);
+
+    //igit start
+    var ir = initialRender;
+    ir = true;
+    setInitialRender(ir)
+    //igit end
+  }
+
+  const handleChange = (event) => {
+    var val = null;
+    if(isNaN(event.target.value)){
+      event.target.value = null;
+    }
+    if (event.target.value.length > 1){
+      val = event.target.value[event.target.value.length -1];
+      event.target.value = null
+      event.target.value = val;
+    }
+    else {
+      val = event.target.value
+      val = parseInt(val)
+    }
+
+    //console.log("Value: " + event.target.value, "Name: " + event.target.name)
+    var rowval = parseInt(event.target.name[0]);
+    var colval = parseInt(event.target.name[1]);
+    checkRowCondition(event, val, rowval, colval);
+  }
+
+  const checkRowCondition = (event, val, rowval, colval) => {
+    val = parseInt(val)
+    //console.log(rowval, colval);
+    var errorstat = false;
+    for(var i = 0; i < 9; i++) {
+      if(i===rowval)
+      {
+        ;
+      }
+      else
+      {
+        if(valueMatrix[rowval][i] === val) {
+          event.target.style.color = 'red';
+          errorstat = true;
+          break;
+        }
+        else {
+          event.target.style.color = '#B8B8B8';
+        }
+      }
+    }
+    if(errorstat === false)
+    {
+      checkColumnCondition(event, val, rowval, colval);
+    }
+  }
+
+  const checkColumnCondition = (event, val, rowval, colval) => {
+    val = parseInt(val)
+    //console.log(rowval, colval);
+    var errorstat = false;
+    for(var i = 0; i < 9; i++) {
+      if(i===rowval) {
+        //console.log("ignore")
+      }
+      else
+      {
+        if(valueMatrix[i][colval] === val) {
+            event.target.style.color = 'red';
+            errorstat = true;
+            break;
+        }
+        else {
+          event.target.style.color = '#B8B8B8';
+        }
+      }
+    }
+    if(errorstat === false)
+    {
+      checkBoxCondition(event, val, rowval, colval);
+    }
+  }
+
+  const checkBoxCondition = (event, val, rowval, colval) => {
+    var errorstat = false;
+    val = parseInt(val)
+    rowval = parseInt(rowval)
+    colval = parseInt(colval)
+    var rowbox = (Math.floor(rowval / 3))*3
+    var colbox = (Math.floor(colval / 3))*3
+    for(var i = rowbox; i < (rowbox+3); i++)
+    {
+      for(var j = colbox; j< (colbox+3); j++)
+      {
+        if(valueMatrix[i][j] === val) {
+          //console.log(i, j)
+          if((i===rowval)&&(j===colval))
+          {
+            //console.log("ignore")
+          }
+          else
+          {
+            event.target.style.color = 'red';
+            errorstat = true;
+            break;
+          }
+        }
+        else {
+          //console.log("ELSE", i, j)
+          event.target.style.color = '#B8B8B8';
+        }
+      }
+      if(errorstat===true)
+      {
+        break;
+      }
+      else {
+        if(Number.isInteger(val))
+        {
+          let copyUpdatedMatrix = valueMatrix;
+          copyUpdatedMatrix[rowval][colval] = val;
+          setValueMatrix(copyUpdatedMatrix);
+          //console.log("Updated?", rowval, colval, val)
+        }
+        else
+        {
+          //console.log("Empty?")
+        }
+      }
+    }
+  }
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="AppHeading">
+      Sudoku Solver
+    </div>
+      <div className="Outergrid">
+        <div className="FirstBoxRow">
+          <div className="NineDigitBox">
+            <div className="FirstRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[0][0]==null
+                ?<input autoComplete="off" name="00" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[0][0]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[0][1]==null
+                ?<input autoComplete="off" name="01" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[0][1]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[0][2]==null
+                ?<input autoComplete="off" name="02" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[0][2]}></input>
+              }
+              </div>
+            </div>
+            <div className="SecondRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[1][0]==null
+                ?<input autoComplete="off" name="10" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[1][0]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[1][1]==null
+                ?<input autoComplete="off" name="11" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[1][1]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[1][2]==null
+                ?<input autoComplete="off" name="12" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[1][2]}></input>
+              }
+              </div>
+            </div>
+            <div className="ThirdRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[2][0]==null
+                ?<input autoComplete="off" name="20" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[2][0]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[2][1]==null
+                ?<input autoComplete="off" name="21" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[2][1]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[2][2]==null
+                ?<input autoComplete="off" name="22" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[2][2]}></input>
+              }
+              </div>
+            </div>
+          </div>
+
+          <div className="NineDigitBox">
+            <div className="FirstRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[0][3]==null
+                ?<input autoComplete="off" name="03" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[0][3]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[0][4]==null
+                ?<input autoComplete="off" name="04" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[0][4]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[0][5]==null
+                ?<input autoComplete="off" name="05" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[0][5]}></input>
+              }
+              </div>
+            </div>
+            <div className="SecondRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[1][3]==null
+                ?<input autoComplete="off" name="13" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[1][3]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[1][4]==null
+                ?<input autoComplete="off" name="14" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[1][4]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[1][5]==null
+                ?<input autoComplete="off" name="15" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[1][5]}></input>
+              }
+              </div>
+            </div>
+            <div className="ThirdRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[2][3]==null
+                ?<input autoComplete="off" name="23" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[2][3]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[2][4]==null
+                ?<input autoComplete="off" name="24" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[2][4]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[2][5]==null
+                ?<input autoComplete="off" name="25" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[2][5]}></input>
+              }
+              </div>
+            </div>
+          </div>
+
+          <div className="NineDigitBox">
+            <div className="FirstRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[0][6]==null
+                ?<input autoComplete="off" name="06" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[0][6]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[0][7]==null
+                ?<input autoComplete="off" name="07" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[0][7]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[0][8]==null
+                ?<input autoComplete="off" name="08" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[0][8]}></input>
+              }
+              </div>
+            </div>
+            <div className="SecondRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[1][6]==null
+                ?<input autoComplete="off" name="16" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[1][6]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[1][7]==null
+                ?<input autoComplete="off" name="17" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[1][7]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[1][8]==null
+                ?<input autoComplete="off" name="18" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[1][8]}></input>
+              }
+              </div>
+            </div>
+            <div className="ThirdRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[2][6]==null
+                ?<input autoComplete="off" name="26" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[2][6]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[2][7]==null
+                ?<input autoComplete="off" name="27" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[2][7]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[2][8]==null
+                ?<input autoComplete="off" name="28" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[2][8]}></input>
+              }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="SecondBoxRow">
+          <div className="NineDigitBox">
+            <div className="FirstRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[3][0]==null
+                ?<input autoComplete="off" name="30" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[3][0]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[3][1]==null
+                ?<input autoComplete="off" name="31" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[3][1]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[3][2]==null
+                ?<input autoComplete="off" name="32" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[3][2]}></input>
+              }
+              </div>
+            </div>
+            <div className="SecondRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[4][0]==null
+                ?<input autoComplete="off" name="33" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[4][0]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[4][1]==null
+                ?<input autoComplete="off" name="41" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[4][1]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[4][2]==null
+                ?<input autoComplete="off" name="42" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[4][2]}></input>
+              }
+              </div>
+            </div>
+            <div className="ThirdRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[5][0]==null
+                ?<input autoComplete="off" name="50" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[5][0]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[5][1]==null
+                ?<input autoComplete="off" name="51" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[5][1]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[5][2]==null
+                ?<input autoComplete="off" name="52" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[5][2]}></input>
+              }
+              </div>
+            </div>
+          </div>
+
+          <div className="NineDigitBox">
+            <div className="FirstRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[3][3]==null
+                ?<input autoComplete="off" name="33" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[3][3]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[3][4]==null
+                ?<input autoComplete="off" name="34" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[3][4]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[3][5]==null
+                ?<input autoComplete="off" name="35" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[3][5]}></input>
+              }
+              </div>
+            </div>
+            <div className="SecondRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[4][3]==null
+                ?<input autoComplete="off" name="43" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[4][3]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[4][4]==null
+                ?<input autoComplete="off" name="44" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[4][4]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[4][5]==null
+                ?<input autoComplete="off" name="45" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[4][5]}></input>
+              }
+              </div>
+            </div>
+            <div className="ThirdRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[5][3]==null
+                ?<input autoComplete="off" name="53" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[5][3]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[5][4]==null
+                ?<input autoComplete="off" name="54" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[5][4]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[5][5]==null
+                ?<input autoComplete="off" name="55" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[5][5]}></input>
+              }
+              </div>
+            </div>
+          </div>
+
+          <div className="NineDigitBox">
+            <div className="FirstRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[3][6]==null
+                ?<input autoComplete="off" name="36" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[3][6]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[3][7]==null
+                ?<input autoComplete="off" name="37" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[3][7]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[3][8]==null
+                ?<input autoComplete="off" name="38" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[3][8]}></input>
+              }
+              </div>
+            </div>
+            <div className="SecondRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[4][6]==null
+                ?<input autoComplete="off" name="46" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[4][6]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[4][7]==null
+                ?<input autoComplete="off" name="47" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[4][7]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[4][8]==null
+                ?<input autoComplete="off" name="48" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[4][8]}></input>
+              }
+              </div>
+            </div>
+            <div className="ThirdRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[5][6]==null
+                ?<input autoComplete="off" name="56" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[5][6]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[5][7]==null
+                ?<input autoComplete="off" name="57" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[5][7]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[5][8]==null
+                ?<input autoComplete="off" name="58" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[5][8]}></input>
+              }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="ThirdBoxRow">
+          <div className="NineDigitBox">
+            <div className="FirstRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[6][0]==null
+                ?<input autoComplete="off" name="60" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[6][0]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[6][1]==null
+                ?<input autoComplete="off" name="61" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[6][1]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[6][2]==null
+                ?<input autoComplete="off" name="62" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[6][2]}></input>
+              }
+              </div>
+            </div>
+            <div className="SecondRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[7][0]==null
+                ?<input autoComplete="off" name="70" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[7][0]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[7][1]==null
+                ?<input autoComplete="off" name="71" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[7][1]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[7][2]==null
+                ?<input autoComplete="off" name="72" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[7][2]}></input>
+              }
+              </div>
+            </div>
+            <div className="ThirdRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[8][0]==null
+                ?<input autoComplete="off" name="80" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[8][0]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[8][1]==null
+                ?<input autoComplete="off" name="81" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[8][1]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[8][2]==null
+                ?<input autoComplete="off" name="82" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[8][2]}></input>
+              }
+              </div>
+            </div>
+          </div>
+
+          <div className="NineDigitBox">
+            <div className="FirstRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[6][3]==null
+                ?<input autoComplete="off" name="63" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[6][3]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[6][4]==null
+                ?<input autoComplete="off" name="64" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[6][4]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[6][5]==null
+                ?<input autoComplete="off" name="65" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[6][5]}></input>
+              }
+              </div>
+            </div>
+            <div className="SecondRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[7][3]==null
+                ?<input autoComplete="off" name="73" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[7][3]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[7][4]==null
+                ?<input autoComplete="off" name="74" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[7][4]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[7][5]==null
+                ?<input autoComplete="off" name="75" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[7][5]}></input>
+              }
+              </div>
+            </div>
+            <div className="ThirdRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[8][3]==null
+                ?<input autoComplete="off" name="83" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[8][3]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[8][4]==null
+                ?<input autoComplete="off" name="84" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[8][4]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[8][5]==null
+                ?<input autoComplete="off" name="85" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[8][5]}></input>
+              }
+              </div>
+            </div>
+          </div>
+
+          <div className="NineDigitBox">
+            <div className="FirstRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[6][6]==null
+                ?<input autoComplete="off" name="66" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[6][6]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[6][7]==null
+                ?<input autoComplete="off" name="67" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[6][7]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[6][8]==null
+                ?<input autoComplete="off" name="68" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[6][8]}></input>
+              }
+              </div>
+            </div>
+            <div className="SecondRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[7][6]==null
+                ?<input autoComplete="off" name="76" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[7][6]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[7][7]==null
+                ?<input autoComplete="off" name="77" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[7][7]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[7][8]==null
+                ?<input autoComplete="off" name="78" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[7][8]}></input>
+              }
+              </div>
+            </div>
+            <div className="ThirdRowInaBox">
+              <div className="IndividualCell">
+              {
+                valueMatrix[8][6]==null
+                ?<input autoComplete="off" name="86" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[8][6]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[8][7]==null
+                ?<input autoComplete="off" name="87" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[8][7]}></input>
+              }
+              </div>
+              <div className="IndividualCell">
+              {
+                valueMatrix[8][8]==null
+                ?<input autoComplete="off" name="88" className="IndividualInputCell" onChange={handleChange}></input>
+                :<input autoComplete="off" className="IndividualInputCell" onChange={handleChange} readOnly="readonly" defaultValue={valueMatrix[8][8]}></input>
+              }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="BottomButtons">
+        <button className="button button1" >Solve Board</button>
+        <button className="button button2" onClick = {() => resetMatrix()}>Reset Board</button>
+      </div>
     </div>
   );
 }
