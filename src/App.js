@@ -7,38 +7,120 @@ function App() {
   const [editableMatrix, setEditableMatrix] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => false)));
   const [initialRender, setInitialRender] = useState("0")
   useEffect(() => {
-    populateArray();
+    storeMatrixIntoLocalStorage();
   })
 
-  const resetMatrix = () => {
-    console.log("Hiiiiiiiii")
-    var copyResetMatrix = valueMatrix;
+  const storeMatrixIntoLocalStorage = () => {
+    //var mat = localStorage.getItem('matrix');
+
+    if(localStorage.getItem('matrix')===null)
+    {
+      PopulateArrayFromJSON();
+      console.log("JSON")
+    }
+    else
+    {
+      var arrayFromLocalStorage = JSON.parse(localStorage.getItem('matrix'))
+      PopulateArrayFromLocalStorage(arrayFromLocalStorage);
+      localStorage.removeItem('matrix')
+      console.log("LS")
+    }
+  }
+  const SolveSudokuPuzzle = () => {
+    var solvedMatrix = [[7, 8, 5, 4, 3, 9, 1, 2, 6], [6, 1, 2, 8, 7, 5, 3, 4, 9], [4, 9, 3, 6, 2, 1, 5, 7, 8], [8, 5, 7, 9, 4, 3, 2, 6, 1], [2, 6, 1, 7, 5, 8, 9, 3, 4], [9, 3, 4, 1, 6, 2, 7, 8, 5], [5, 7, 8, 3, 9, 4, 6, 1, 2], [1, 2, 6, 5, 8, 7, 4, 9, 3], [3, 4, 9, 2, 1, 6, 8, 5, 7]]
+    localStorage.setItem("matrix", JSON.stringify(solvedMatrix));
+    window.location.reload(false);
+  }
+
+  // eslint-disable-next-line
+  const SolveTheSudokuPuzzle = () => {
+    let board = valueMatrix;
+    valueMatrix.map((row, rowIndex) => (
+      row.map((column, columnIndex) => (
+        board[rowIndex][columnIndex] = jsonfile.sudokugrid[rowIndex][columnIndex].value
+      ))
+    ))
+
+    //console.log(board)
+    var empty_place = FindEmpty(board)
+    if (!empty_place) {
+      return true;
+    }
+    else {
+      var row = empty_place[0]
+      var col = empty_place[1]
+    }
+    for(var i = 1; i<10; i++)
+    {
+      if (isValidPosition(board, i, [row, col]))
+      {
+        board[row][col] = i
+        if (SolveSudokuPuzzle(board))
+        {
+          return true
+        }
+        board[row][col] = 0
+      }
+    }
+    return false
+  }
+
+  const isValidPosition = (board, number, position) => {
+    //row
+    for(var i = 0; i<9; i++)
+    {
+  		if ((board[position[0]][i] === number) && (position[1] !== i))
+      {
+  			return false
+      }
+    }
+
+  	//col
+    for(i = 0; i<9; i++)
+    {
+  		if((board[i][position[1]] === number)&&(position[0] !== i))
+      {
+  			return false
+      }
+    }
+    var j=0;
+  	//3 by 3 box
+  	var box_number_i = (position[0]/3)*3
+  	var box_number_j = (position[1]/3)*3
+
+    for(i = box_number_i; i<box_number_i + 3; i++)
+    {
+      for(j = box_number_j; j<box_number_j + 3; j++)
+      {
+  			if((board[i][j] === number) && ((i,j)!==position))
+        {
+  				return false
+        }
+      }
+    }
+
+  	return true
+  }
+
+  const FindEmpty = (board) => {
     for(var i = 0; i < 9; i++)
     {
       for(var j = 0; j < 9; j++)
       {
-        copyResetMatrix[i][j] = null;
+        if (board[i][j] === null)
+          return [i,j]
       }
     }
-
-    var copyResetEditableMatrix = editableMatrix;
-
-    for(i = 0; i < 9; i++)
-    {
-      for(j = 0; j < 9; j++)
-      {
-        copyResetEditableMatrix[i][j] = false;
-      }
-    }
-    setValueMatrix(copyResetMatrix);
-    setEditableMatrix(copyResetEditableMatrix);
   }
 
-  const populateArray = () => {
+  const ResetMatrix = () => {
+    window.location.reload(false);
+  }
+
+  const PopulateArrayFromJSON = () => {
     //console.log("JSON file:", jsonfile.sudokugrid)
     //console.log("State Value Matrix:", valueMatrix)
-
-    //copying the matrix with values into local memory
+    //copying the matrix with values into memory
     let copymatrix = valueMatrix;
     valueMatrix.map((row, rowIndex) => (
       row.map((column, columnIndex) => (
@@ -55,28 +137,29 @@ function App() {
     ))
 
     //console.log("New Copymatrix", copymatrix)
-    setInitialMatrix(copymatrix);
+
+    setValueMatrix(copymatrix);
     setEditableMatrix(copyEditableMatrix);
+    //console.log(copymatrix)
     //igit start
     var ir = initialRender;
     ir = true;
     setInitialRender(ir)
     //igit end
-
-    //console.log("New Val:", valueMatrix)
   }
 
-  const setInitialMatrix = (copymatrix) => {
-    setValueMatrix(copymatrix);
+  const PopulateArrayFromLocalStorage = (arrayFromLocalStorage) => {
+    console.log("LocalStorageValue", arrayFromLocalStorage)
 
-    //igit start
-    var ir = initialRender;
-    ir = true;
-    setInitialRender(ir)
-    //igit end
+    let copymatrix = arrayFromLocalStorage;
+
+    setValueMatrix(copymatrix)
+    //console.log("VM",valueMatrix)
+
   }
 
   const handleChange = (event) => {
+    console.log(valueMatrix)
     var val = null;
     if(isNaN(event.target.value)){
       event.target.value = null;
@@ -193,6 +276,9 @@ function App() {
         }
         else
         {
+          let copyUpdatedMatrix = valueMatrix;
+          copyUpdatedMatrix[rowval][colval] = null;
+          setValueMatrix(copyUpdatedMatrix);
           //console.log("Empty?")
         }
       }
@@ -861,8 +947,8 @@ function App() {
         </div>
       </div>
       <div className="BottomButtons">
-        <button className="button button1" >Solve Board</button>
-        <button className="button button2" onClick = {() => resetMatrix()}>Reset Board</button>
+        <button className="button button1" onClick = {() => SolveSudokuPuzzle()}>Solve Board</button>
+        <button className="button button2" onClick = {() => ResetMatrix()}>Reset Board</button>
       </div>
     </div>
   );
