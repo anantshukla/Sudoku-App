@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import './App.css';
 import jsonfile from './puzzle.json';
+import vals from './value.json'
 
 function App() {
   const [valueMatrix, setValueMatrix] = useState(Array.from({length: 9},()=> Array.from({length: 9}, () => null)));
@@ -27,8 +28,8 @@ function App() {
     }
   }
   const SolveSudokuPuzzle = () => {
-    var solvedMatrix = [[7, 8, 5, 4, 3, 9, 1, 2, 6], [6, 1, 2, 8, 7, 5, 3, 4, 9], [4, 9, 3, 6, 2, 1, 5, 7, 8], [8, 5, 7, 9, 4, 3, 2, 6, 1], [2, 6, 1, 7, 5, 8, 9, 3, 4], [9, 3, 4, 1, 6, 2, 7, 8, 5], [5, 7, 8, 3, 9, 4, 6, 1, 2], [1, 2, 6, 5, 8, 7, 4, 9, 3], [3, 4, 9, 2, 1, 6, 8, 5, 7]]
-    localStorage.setItem("matrix", JSON.stringify(solvedMatrix));
+    console.log(vals)
+    localStorage.setItem("matrix", JSON.stringify(vals));
     window.location.reload(false);
   }
 
@@ -949,6 +950,12 @@ function App() {
       <div className="BottomButtons">
         <button className="button button1" onClick = {() => SolveSudokuPuzzle()}>Solve Board</button>
         <button className="button button2" onClick = {() => ResetMatrix()}>Reset Board</button>
+      </div>
+      <div className="BottomtText1">
+        For Python Solver, <a href="https://github.com/anantshukla/Sudoku-App/Python-Solver/sudokusolver.py">Please click here</a>
+      </div>
+      <div className="BottomtText2">
+        I'll add more Sudoku Puzzles to this as soon I get time :3
       </div>
     </div>
   );

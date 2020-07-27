@@ -119,3 +119,35 @@ div.IndividualCell
   background-color: #bb86fc;
   color: #282c34;
 }
+
+.BottomtText1 {
+  color: grey;
+  font-size: 3vh;
+  text-align: right;
+  width: 100%;
+  margin-right: 10%;
+}
+
+.BottomtText2 {
+  color: grey;
+  font-size: 2vh;
+  text-align: right;
+  width: 100%;
+  margin-right: 10%;
+}
+
+a:link {
+  color: darkblue;
+}
+
+a:visited {
+  color: darkblue;
+}
+
+a:hover {
+  color: darkblue;
+}
+
+a:active {
+  color: darkblue;
+}
