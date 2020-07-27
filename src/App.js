@@ -952,7 +952,7 @@ function App() {
         <button className="button button2" onClick = {() => ResetMatrix()}>Reset Board</button>
       </div>
       <div className="BottomtText1">
-        For Python Solver, <a href="https://github.com/anantshukla/Sudoku-App/Python-Solver/sudokusolver.py">Please click here</a>
+        For Python Solver, <a href="https://github.com/anantshukla/Sudoku-App/blob/master/Python%20Solver/sudokusolver.py">Please click here</a>
       </div>
       <div className="BottomtText2">
         I'll add more Sudoku Puzzles to this as soon I get time :3
