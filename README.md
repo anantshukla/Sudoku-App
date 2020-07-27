@@ -1,6 +1,6 @@
-#Sudoku Application and Solver#
+# Sudoku Application and Solver #
 
-###You can find the app here: https://sudoku.anantshukla.tech/###
+### You can find the app here: https://sudoku.anantshukla.tech/ ###
 
 *This application is written in ReactJS and the solver is written in Python. The Solver uses Backtracking in order to find the solution.*
 
